@@ -43,6 +43,10 @@ to build the example.
 If you get AddressSanitizer errors, that may be expected.  I created this project
 to replicate the ASAN bugs I was seeing.  You can disable ASAN by commenting out
 the ASAN related lines in CMakeLists.txt and then re-running cmake and make.
+Update: gRPC and dependencies must currently also be compiled with ASAN for ASAN to work.
+
+This example uses new "editions" of protobuf, and currently needs this:
+https://github.com/microsoft/vcpkg/pull/39800 which is not yet merged into vcpkg.
 
 ## License
 This project is licensed under the Apache License v2.0

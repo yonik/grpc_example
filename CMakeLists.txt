@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(grpc_example CXX)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #enable address sanitizer (ASAN)
 add_compile_options(-fsanitize=address)
@@ -26,10 +28,13 @@ target_link_libraries(myproto
 # generated .h files will be placed in the build directory, so we need to add that to the include path
 target_include_directories(myproto PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-# actually generate needed files from the protobuf files
+# actually generate needed files from the protobuf files.  Note that --experimental_editions is currently needed
+# to use edition="2023" in the .proto files.
 get_target_property(grpc_cpp_plugin_location gRPC::grpc_cpp_plugin LOCATION)
-protobuf_generate(TARGET myproto LANGUAGE cpp)
-protobuf_generate(TARGET myproto LANGUAGE grpc GENERATE_EXTENSIONS .grpc.pb.h .grpc.pb.cc PLUGIN "protoc-gen-grpc=${grpc_cpp_plugin_location}")
+protobuf_generate(TARGET myproto LANGUAGE cpp
+        PROTOC_OPTIONS --experimental_editions)
+protobuf_generate(TARGET myproto LANGUAGE grpc GENERATE_EXTENSIONS .grpc.pb.h .grpc.pb.cc PLUGIN "protoc-gen-grpc=${grpc_cpp_plugin_location}"
+        PROTOC_OPTIONS --experimental_editions)
 
 
 # Create our executable
